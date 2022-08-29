@@ -1,0 +1,21 @@
+body
+{
+    min-width: 100vw;
+    min-height: 100vh;
+    background: gray;
+}
+
+#taj-mahal 
+{
+    position: relative;
+}
+
+.color-blue 
+{
+    color: blue;
+}
+
+#p-id 
+{
+    color: red;
+}

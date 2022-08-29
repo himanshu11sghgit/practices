@@ -1,0 +1,72 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.0/css/bootstrap.min.css" integrity="sha512-XWTTruHZEYJsxV3W/lSXG1n3Q39YIWOstqvmFsdNEEQfHoZ6vm6E9GK2OrF6DSJSpIbRbi+Nn0WDPID9O7xB2Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
+    <title>Document</title>
+</head>
+<body>
+    
+    <div class="container mt-5">
+        <h2 class="text-center alert alert-danger">Crud Django Project with JQuery</h2>
+        
+        <div class="row">
+            <div class="col-sm-4">
+                <h2 class="text-center alert alert-info font-size-small">Add/Update Student Information</h2>
+
+                <form action="" method="POST" novalidate>
+                    {% csrf_token %}
+                    <input type="hidden" name="id" id="id-id">
+                    {{form.as_p}}
+
+                    <div class="d-flex justify-content-between">
+                        <input type="button" value="Save" class="btn btn-sm btn-success" id="btn-save">
+                        <input type="reset" value="Reset" class="btn btn-sm btn-danger" id="btn-reset">
+                    </div>
+                </form>
+            </div>
+
+            <div class="col-sm-7 offset-1">
+                <h2 class="text-center alert alert-info font-size-small">Show Student Information</h2>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Password</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for student in students %}
+                            <tr>
+                                <td>{{student.id}}</td>
+                                <td>{{student.name}}</td>
+                                <td>{{student.email}}</td>
+                                <td>{{student.password}}</td>
+                                <td id="col-action">
+                                    <button class="btn btn-sm btn-warning btn-update" data-sid="{{student.id}}">Update</button>
+                                    <button class="btn btn-sm btn-danger btn-delete" data-sid="{{student.id}}">Delete</button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js" integrity="sha512-2rNj2KJ+D8s1ceNasTIex6z4HWyOnEYLVC3FigGOmyQCZc2eBXKgOxQmo3oKLHyfcj53uz4QMsRCWNbLd32Q1g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.0/js/bootstrap.min.js" integrity="sha512-8Y8eGK92dzouwpROIppwr+0kPauu0qqtnzZZNEF8Pat5tuRNJxJXCkbQfJ0HlUG3y1HB3z18CSKmUo7i2zcPpg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="{% static 'core/js/index.js' %}"></script>
+
+</body>
+</html>
