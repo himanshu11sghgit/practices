@@ -1,0 +1,73 @@
+{% extends 'core/base.html' %}
+
+
+{% block title %} Dashboard {% endblock %}
+
+
+
+
+{% block content %} 
+    <h2 class="text-center alert alert-success">Dashboard Page</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <h4 class="text-center alert alert-success">{{message}}</h4>
+        {% endfor %}
+    {% endif %}
+    
+    
+    <div class="col-sm-1 text-center fw-bold">
+        <p>{{full_name}}</p>
+        {% for group in groups %}
+        <p>{{group}}</p>
+        
+        {% endfor %}
+        
+    </div>
+    <div class="col-sm-4">
+        <form action="" method="POST" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
+
+            {{form.as_p}}
+
+            <input type="submit" value="Save" class="btn btn-sm btn-success">
+            <input type="reset" value="Reset" class="btn btn-sm btn-danger">
+        </form>
+    </div>
+
+    <div class="col-sm-7">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <td>Id</td>
+                    <td>Title</td>
+                    <td>Description</td>
+                    <td>Action</td>
+                </tr>
+            </thead>
+
+            {% for blog in blogs %}
+                <tbody>
+                    <tr>
+                        <td style="max-width:5vw;">{{blog.id}}</td>
+                        <td style="max-width:10vw; word-wrap:break-word;">{{blog.title}}</td>
+                        <td style="max-width:30vw;">{{blog.description}}</td>
+                        <td style="max-width:10vw;">
+                            <a href="/update/{{blog.id}}" style="text-decoration:none;">
+                                <button class="btn btn-sm btn-warning">Update</button>
+                            </a>
+
+                            {% if perms.core.delete_blog %}
+                            <a href="/delete/{{blog.id}}" style="text-decoration:none;">
+                                <button class="btn btn-sm btn-danger">Delete</button>
+                            </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                </tbody>
+            {% endfor %}
+        </table>
+    </div>
+    
+
+{% endblock %}

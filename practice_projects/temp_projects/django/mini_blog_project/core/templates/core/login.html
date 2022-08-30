@@ -1,0 +1,45 @@
+{% extends 'core/base.html' %}
+
+
+{% block title %} Login {% endblock %}
+
+
+
+
+{% block content %} 
+
+    <div class="col-sm-10 offset-1">
+        <h2 class="text-center alert alert-success">Login Page</h2>
+
+        {% if messages %}
+            {% for message in messages %}
+                <h4 class="text-center alert alert-success">{{message}}</h4>
+            {% endfor %}
+        {% endif %}
+
+        <div class="col-sm-8 offset-2">
+            <form action="" method="POST" novalidate>
+                {% csrf_token %}
+                {% for fm in form %}
+                    <div class="mt-3">
+                        {{fm.label_tag}} {{fm}} 
+                        <small class="text-danger">{{fm.errors|striptags}}</small>
+                    </div>
+                
+                {% endfor %}
+                <input type="Submit" value="Login" class="btn btn-sm btn-success">
+                <input type="reset" value="Reset" class="btn btn-sm btn-danger">
+
+                {% if form.non_field_errors %}
+                    {% for error in form.non_field_errors %}
+                        <p class="alert alert-danger">{{error}}</p>
+                    {% endfor %}
+
+                {% endif %}
+            </form>
+
+        </div>
+        
+    </div>
+
+{% endblock %}
