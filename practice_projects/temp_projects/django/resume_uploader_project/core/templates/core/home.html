@@ -1,0 +1,79 @@
+{% extends 'core/base.html' %}
+
+
+{% block title %} Home {% endblock %}
+
+
+{% block css %}
+    <style>
+        #id_gender, #id_job_city
+        {
+            display: inline-flex;
+        }
+
+        #id_gender > div, #id_job_city > div
+        {
+            padding-left: 20px;
+        }
+    </style>
+
+
+{% endblock %}
+
+
+{% block content %} 
+    <div class="col-sm-8">
+        <h3 class="alert alert-info text-center">Add Resume</h3>
+
+        <form action="" method="POST" enctype="multipart/form-data" novalidate class="shadow">
+            {% csrf_token %}
+
+            {% for fm in form %}
+                <div class="mb-3">
+                    {{fm.label_tag}} {{fm}} <span class="text-danger">{{fm.errors}}</span> 
+
+                </div>
+            {% endfor %}
+
+            <input type="submit" value="Save" class="btn btn-sm btn-success">
+            <input type="reset" value="Reset" class="btn btn-sm btn-danger">
+
+
+            {% if form.non_field_errors %}
+                {% for error in form.non_field_errors %} 
+                    <p class="text-danger">{{error}}</p>
+                {% endfor %}
+            {% endif %}
+        </form>
+    </div>
+
+
+    <div class="col-sm-4">
+        <h3 class="alert alert-info text-center">List of Candidates</h3>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <td>Id</td>
+                    <td>Name</td>
+                    <td>Action</td>
+                </tr>
+            </thead>
+            
+            <tbody>
+                {% for resume in resumes %}
+                    <tr>
+                        <td>{{resume.id}}</td>
+                        <td><a href="/view/{{resume.id}}/" style="text-decoration:none;">{{resume.name}}</a></td>                        
+                        <td>
+                            <a href="/delete/{{resume.id}}/"><button class="btn btn-sm btn-danger">Delete</button></a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+            
+
+    </div>
+
+
+{% endblock %}

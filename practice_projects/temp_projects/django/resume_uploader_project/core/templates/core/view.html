@@ -1,0 +1,32 @@
+{% extends 'core/base.html' %}
+
+
+{% block title %} View {% endblock %}
+
+
+{% block css %}
+    <style>
+        img
+        {
+            float: right;
+        }
+    </style>
+
+
+{% endblock %}
+
+
+{% block content %} 
+    <div class="col-sm-8 offset-2">
+        <h4 class="text-center alert alert-info">Candidate Details</h4>
+        <img src="{{resume.image.url}}" alt="">
+        <p>Application No.: {{resume.id}}</p>
+        <p>Applicant name: {{resume.name}}</p>
+        <p class="mb-5">Dob: {{resume.dob}}</p>
+        <a href="/" style="text-decoration:none;"><button class="btn btn-sm btn-warning">Back</button></a>
+    </div>
+
+
+
+
+{% endblock %}
