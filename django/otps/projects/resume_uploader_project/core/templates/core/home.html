@@ -1,0 +1,77 @@
+{% extends 'core/base.html' %}
+
+
+{% block title %} Home {% endblock %}
+
+
+{% block css %}
+    <style>
+        #id_gender, #id_job_city
+        {
+            display: inline-flex;
+        }
+        #id_gender > div, #id_job_city > div
+        {
+            padding-left: 30px;
+        }
+    </style>
+
+{% endblock %}
+
+
+
+{% block content %}
+<div class="col-sm-8">
+    <h2 class="text-center alert alert-info" style="font-size: small;">Upload Resume</h2>
+
+    <form action="" method="POST" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+
+        {% for fm in form %}
+            <div class="mb-3">
+                {{fm.label_tag}} {{fm}} <span class="text-danger">{{fm.errors}}</span> 
+
+            </div>
+        {% endfor %}
+
+        <input type="submit" value="Upload" class="btn btn-sm btn-success">
+        <input type="reset" value="Reset" class="btn btn-sm btn-danger">
+    </form>
+</div>
+
+<div class="col-sm-4">
+    <h3 class="text-center alert alert-info" style="font-size: small;">List of candidates</h3>
+    {% if resumes %}
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <td>Id</td>
+                    <td>Name</td>
+                    <td>Action</td>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for resume in resumes %}
+                    <tr>
+                        <td>{{resume.id}}</td>
+                        <td>
+                            <a href="/view/{{resume.id}}/">{{resume.name}}</a>
+                        </td>
+                        <td>
+                            <a href="/delete/{{resume.id}}/">
+                                <button class="btn btn-sm btn-danger">Delete</button>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    {% else %}
+        <h4 class="text-center alert alert-warning" style="font-size: small;">No record found</h4>
+    {% endif %}
+</div>
+
+
+{% endblock %}

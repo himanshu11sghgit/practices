@@ -1,0 +1,33 @@
+{% extends 'core/base.html' %}
+
+
+
+{% block title %} View {% endblock %}
+
+
+
+{% block content %} 
+    <div class="col-sm-8 offset-2">
+        <h3 class="text-center alert alert-info" style="font-size:small;">Candidate Information</h3>
+
+        <p>Application no.: {{resume.id}}</p>
+        <img src="{{resume.profile_img.url}}" alt="" style="float:right;">
+        <p>name: {{resume.name}}</p>
+        <p>dob: {{resume.dob}}</p>
+        <p>gender: {{resume.gender}}</p>
+        <p>address: {{resume.address}}</p>
+        <p>state: {{resume.state}}</p>
+        <p>pin: {{resume.pin}}</p>
+        <p>mobile: {{resume.mobile}}</p>
+        <p>job cities: {{resume.job_city}}</p>
+        <p>file: 
+            <a href="{{resume.file.url}}" download>Download</a>
+        </p>
+
+        <a href="/">
+            <button class="btn btn-sm btn-warning">Back</button>
+        </a>
+    </div>
+
+
+{% endblock %}

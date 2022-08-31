@@ -3,24 +3,22 @@ from django.db import models
 # Create your models here.
 
 STATE_CHOICES = (
-    ('Assam', 'Assam'),
-    ('Bihar', 'Bihar'),
     ('Delhi', 'Delhi'),
-    ('Goa', 'Goa'),
+    ('Bihar', 'Bihar'),
     ('Haryana', 'Haryana'),
+    ('Goa', 'Goa'),
+    ('Kerala', 'Kerala'),
 )
 
 
 class Resume(models.Model):
     name = models.CharField(max_length=255)
-    dob = models.DateField(auto_now=False, auto_now_add=False)
+    dob = models.DateField(auto_now_add=False, auto_now=False)
     gender = models.CharField(max_length=255)
-    locality = models.CharField(max_length=255)
-    city = models.CharField(max_length=255)
-    pin = models.PositiveIntegerField()
+    address = models.TextField()
     state = models.CharField(choices=STATE_CHOICES, max_length=255)
-    mobile = models.PositiveIntegerField()
-    email = models.EmailField()
+    pin = models.IntegerField()
+    mobile = models.IntegerField()
     job_city = models.CharField(max_length=255)
-    image = models.ImageField(upload_to='my_images', blank=True)
+    profile_img = models.ImageField(upload_to='my_images', blank=True)
     file = models.FileField(upload_to='my_files', blank=True)
