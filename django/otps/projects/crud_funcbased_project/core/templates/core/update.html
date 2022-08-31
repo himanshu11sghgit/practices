@@ -1,0 +1,29 @@
+{% extends 'core/base.html' %}
+
+
+{% block title %} Update {% endblock %}}
+
+
+
+{% block content %}
+    <div class="col-sm-8 offset-2">
+        <h3 class="text-center alert alert-info" style="font-size:small;">Update Student Information</h3>
+
+        <form action="" method="POST" novalidate>
+            {% csrf_token %}
+
+            {{form.as_p}}
+
+            <input type="submit" value="Save" class="btn btn-sm btn-success">
+            <input type="reset" value="Reset" class="btn btn-sm btn-danger">
+            
+            <a href="/" style="text-decoration:none;float:right;">
+                <button class="btn btn-sm btn-warning">Back</button>
+            </a>
+            
+        </form>
+
+    </div>
+
+
+{% endblock %}}
