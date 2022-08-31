@@ -1,13 +1,16 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
-from django.contrib import messages
 from django.contrib.auth.models import Group
+from django.contrib import messages
+
 
 
 from .forms import SignupForm, LoginForm, BlogForm
 from .models import Blog
 
+
 # Create your views here.
+
 
 
 def home(request):
@@ -27,50 +30,24 @@ def contact(request):
 def dashboard(request):
     if not request.user.is_authenticated:
         return redirect('/login/')
-
     if request.method == 'POST':
         form = BlogForm(data=request.POST, files=request.FILES)
         if form.is_valid():
             form.save()
             form = BlogForm()
-            messages.success(request, 'Blog saved successfully!!')
+            messages.success(request, 'blog saved successfully!!')
     else:
         form = BlogForm()
-    
     blogs = Blog.objects.all()
     full_name = request.user.get_full_name()
-    groups = request.user.groups.all()
-    context = {'form': form, 'blogs': blogs, 'full_name': full_name, 'groups': groups}
+    group = request.user.groups.get()
+    context = {
+        'form': form,
+        'blogs': blogs, 
+        'full_name': full_name,
+        'group': group
+    }
     return render(request, 'core/dashboard.html', context)
-
-
-def update_data(request, id):
-    if not request.user.is_authenticated:
-        return redirect('/login/')
-    if request.method == 'POST':
-        blog = Blog.objects.get(id=id)
-        form = BlogForm(data=request.POST, files=request.FILES, instance=blog)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'blog updated successfully!!')
-            return redirect('/dashboard/')
-
-    else:
-        blog = Blog.objects.get(id=id)
-        form = BlogForm(instance=blog)
-    context = {'form': form}
-    return render(request, 'core/update.html', context)
-    
-
-
-def delete_data(request, id):
-    if not  request.user.is_authenticated:
-        return redirect('/login/')
-    if request.user.has_perm('core.delete_blog'):
-        Blog.objects.get(id=id).delete()
-        messages.success(request, 'blog deleted successfully!!')
-
-    return redirect('/dashboard/')
 
 
 def user_signup(request):
@@ -80,12 +57,12 @@ def user_signup(request):
         form = SignupForm(data=request.POST)
         if form.is_valid():
             user = form.save()
-            messages.success(request, 'Signup successfully!!')
             if Group.objects.filter(name='Author').exists():
                 group = Group.objects.get(name='Author')
                 user.groups.add(group)
+            messages.success(request, 'Signup successfully!!')
             return redirect('/login/')
-    else:
+    else: 
         form = SignupForm()
     context = {'form': form}
     return render(request, 'core/signup.html', context)
@@ -100,8 +77,10 @@ def user_login(request):
             user = authenticate(request, **form.cleaned_data)
             if user is not None:
                 login(request, user)
-                messages.success(request, 'Signup successfully!!')
+                messages.success(request, 'Login successfully!!')
                 return redirect('/dashboard/')
+            else:
+                messages.error(request, 'authentication failed!!')
     else:
         form = LoginForm()
     context = {'form': form}
@@ -109,6 +88,34 @@ def user_login(request):
 
 
 def user_logout(request):
+    if not request.user.is_authenticated:
+        return redirect('/login/')
     logout(request)
     return redirect('/login/')
 
+
+def update_data(request, id):
+    if not request.user.is_authenticated:
+        return redirect('/login/')
+    blog = Blog.objects.get(id=id)
+    if request.method == 'POST':
+        form = BlogForm(data=request.POST, files=request.FILES, instance=blog)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Blog updated successfully!!')
+            return redirect('/dashboard/')
+    else:
+        form = BlogForm(instance=blog)
+    context = {'form': form}
+
+    return render(request, 'core/update.html', context)
+
+
+def delete_data(request, id):
+    if not request.user.is_authenticated:
+        return redirect('/login/')
+    if not request.user.has_perm('core.delete_blog'):
+        return redirect('/dashboard/')
+    Blog.objects.get(id=id).delete()
+    messages.success(request, 'Blog deleted successfully!!')
+    return redirect('/dashboard/')

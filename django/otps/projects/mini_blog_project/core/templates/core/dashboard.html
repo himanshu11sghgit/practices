@@ -1,0 +1,89 @@
+{% extends 'core/base.html' %}
+
+
+{% block title %} Dashboard {% endblock %}
+
+
+
+{% block css %} {% endblock %}
+
+
+
+{% block content %} 
+    <h3 class="text-center alert alert-info">
+        Dashboard Page <br> 
+        Name: {{full_name}} <br>
+        Groups: {{group}}
+    </h3>
+
+
+    
+
+    {% if messages %}
+        {% for message in messages %}
+            <h4 class="text-center alert alert-warning">{{message}}</h4>
+        {% endfor %}
+    {% endif %}
+
+    <div class="col-sm-4">
+        <h4 class="text-center alert alert-info">Add Blog </h4>
+
+        <form action="" method="POST" enctype="multipart/form-data" novalidate>
+
+            {% csrf_token %}
+            {% for fm in form %}
+                {{fm.label_tag}} {{fm}} <span class="text-danger">{{fm.errors}}</span>
+            {% endfor %}
+
+            {% if form.non_field_errors %}
+                {% for error in form.non_field_errors %}
+                    <p class="alert alert-danger">{{error}}</p>
+                {% endfor %}
+            {% endif %}
+
+            <input type="submit" value="Signup" class="btn btn-sm btn-success">
+            <input type="reset" value="Reset" class="btn btn-sm btn-danger">
+        </form>
+    </div>
+
+    <div class="col-sm-8">
+        <h4 class="text-center alert alert-info">List of Blogs</h4>
+
+        <table class="table table-hover shadow">
+            <thead>
+                <tr>
+                    <td>Id</td>
+                    <td>Title</td>
+                    <td>Description</td>
+                    <td>Action</td>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for blog in blogs %}
+                    <tr>
+                        <td>{{blog.id}}</td>
+                        <td>{{blog.title}}</td>
+                        <td>{{blog.description}}</td>
+                        <td>
+                            <a href="/update/{{blog.id}}/" style="text-decoration: none;">
+                                <button class="btn btn-sm btn-warning">Update</button>
+                            </a>
+                            {% if perms.core.delete_blog %}
+                            <a href="/delete/{{blog.id}}/" style="text-decoration: none;">
+                                <button class="btn btn-sm btn-danger">Delete</button>
+                            </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+
+                {% empty%}
+                    <h4 class="text-center alert alert-warning">No record found</h4>
+
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+
+{% endblock %}

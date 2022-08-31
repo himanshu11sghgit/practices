@@ -1,0 +1,38 @@
+{% extends 'core/base.html' %}
+
+
+{% block title %} Home {% endblock %}
+
+
+
+{% block css %} {% endblock %}
+
+
+
+{% block content %} 
+    <h3 class="text-center alert alert-info">Home Page</h3>
+
+    {% for blog in blogs %}
+        <div class="col-sm-3">
+            <div class="card" style="width: 100%;">
+                <img src="{{blog.image.url}}" class="card-img-top" alt="...">
+                <p class="card-footer">created_at: {{blog.created_at}}</p>
+            </div>
+        </div>
+
+        <div class="col-sm-9">
+            <div class="card" style="width: 100%;">
+                <div class="card-body">
+                    <h5 class="card-title">{{blog.title}}</h5>
+                    <p class="card-text">{{blog.description}}<p>
+                </div>
+            </div>
+        </div>
+
+    {% endfor %}
+
+
+
+
+
+{% endblock %}
