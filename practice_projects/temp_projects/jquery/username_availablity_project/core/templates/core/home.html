@@ -35,49 +35,57 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js" integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js" integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK" crossorigin="anonymous"></script>
     <script type="text/javascript">
-        $("input[name=username]").blur(function () 
+        $(document).ready(function ()
         {
-            let usernameValue = $("input[name=username]").val();
-            let csrf = $("input[name=csrfmiddlewaretoken]").val();
+            $("#save-btn").on("click", function ()
+            {
+                let username = $("#username").val();
+                let csrf = $("input[name=csrfmiddlewaretoken]").val();
 
-            data = {
-                purpose: "Check username",
-                name: usernameValue,
-                csrfmiddlewaretoken: csrf
-            }
-
-            $.ajax(
+                if (username.length === 0)
                 {
-                    url: "/",
-                    method: "POST",
-                    data: data,
-                    dataType: "text",
-                    success: function (data) 
-                    {
-                        let json_obj = $.parseJSON(data);
-                        console.log(json_obj);
-                        if (json_obj.status === 1)
-                        {
-                            $("#available").text("Username is available!!");
-                            $("#available").removeClass("text-danger");
-                            $("#available").addClass("text-success");
-                            $("#available").show();
-                        }
-                        else
-                        {
-                            $("#available").text("Username is not available!!");
-                            $("#available").removeClass("text-success");
-                            $("#available").addClass("text-danger");
-                            $("#available").show();
-
-                        }
-                    },
-                    error: function () 
-                    {
-                        console.log("error!!");
-                    }
+                    alert("Enter username");
                 }
-            )
+                else
+                {
+                    data = {
+                        name: username,
+                        csrfmiddlewaretoken: csrf
+                    }
+                    $.ajax(
+                        {
+                            url: "/",
+                            method: "POST",
+                            data: data,
+                            dataType: "text",
+                            success: function (data) 
+                            {
+                                let json_obj = $.parseJSON(data);
+                                console.log(json_obj);
+                                if (json_obj.status === 1)
+                                {
+                                    $("#available").text("Username is available!!");
+                                    $("#available").removeClass("text-danger");
+                                    $("#available").addClass("text-success");
+                                    $("#available").show();
+                                }
+                                else
+                                {
+                                    $("#available").text("Username is not available!!");
+                                    $("#available").removeClass("text-success");
+                                    $("#available").addClass("text-danger");
+                                    $("#available").show();
+
+                                }
+                            },
+                            error: function ()
+                            {
+                                console.log("error!!");
+                            }
+                        }
+                    )
+                }
+            })
         })
     </script>
 
