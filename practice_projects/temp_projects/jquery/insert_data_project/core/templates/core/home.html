@@ -34,46 +34,60 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script type="text/javascript">
-        $(document).ready(function () 
+        $(document).ready(function ()
         {
             $("form").on("submit", function (event)
             {
+
                 let name = $("input[name=name]").val();
                 let email = $("input[name=email]").val();
                 let password = $("input[name=password]").val();
                 let csrf = $("input[name=csrfmiddlewaretoken]").val();
 
-                data = {
-                    name: name,
-                    email: email,
-                    password: password,
-                    csrfmiddlewaretoken: csrf
+                if (name === "")
+                {
+                    alert("Enter a name");
                 }
-
-                $.ajax(
-                    {
-                        url: "/",
-                        method: "POST",
-                        data: data,
-                        dataType: "text",
-                        success: function (data) 
-                        {
-                            let json_obj = $.parseJSON(data)
-                            console.log("success!!");
-                            console.log(json_obj.msg);
-                            $("#message").text(json_obj.msg).show();
-                            $("form")[0].reset();
-                            
-                        },
-                        error: function ()
-                        {
-                            console.log("error!!");
-                        }
+                else if (email === "")
+                {
+                    alert("Enter an email");
+                }
+                else if (password === "")
+                {
+                    alert("Enter a password");
+                }
+                else
+                {
+                    data = {
+                        name: name,
+                        email: email,
+                        password: password,
+                        csrfmiddlewaretoken: csrf
                     }
-                )
+        
+                    $.ajax(
+                        {
+                            url: "/",
+                            method: "POST",
+                            data: data,
+                            dataType: "text",
+                            success: function (data)
+                            {
+                                console.log(data);
+                                alert(data);
+                            },
+                            error: function ()
+                            {
+                                console.log("error!!");
+                                alert("error!!")
+                            }
+                        }
+                    )
 
+                }
+                $("form")[0].reset();
                 event.preventDefault();
-            })
+            });
         })
     </script>
 </body>
