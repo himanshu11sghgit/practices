@@ -1,0 +1,72 @@
+from django.shortcuts import render
+from django.http import JsonResponse
+from django.core import serializers
+from django.forms.models import model_to_dict
+import json
+
+
+from core.models import Student
+from core.forms import StudentForm
+
+# Create your views here.
+
+
+
+def home(request):
+    
+    if request.method == 'POST':
+        print(request.POST)
+        form = StudentForm(data=request.POST)
+        id = request.POST.get('id')
+        if form.is_valid():
+                
+            name = form.cleaned_data.get('name')
+            email = form.cleaned_data.get('email')
+            password = form.cleaned_data.get('password')
+
+            if id == '':
+                student = Student(name=name, email=email, password=password)
+            else:
+                student = Student(id=id, name=name, email=email, password=password)
+
+            student.save()
+
+            d = model_to_dict(student)
+
+            students = Student.objects.values()
+            students_list = list(students)
+
+            return JsonResponse({'status': '1', 'students': students_list})
+        else:
+            return JsonResponse({'status': '0'})
+
+
+    form = StudentForm()
+    students = Student.objects.all()
+    context = {
+        'form': form,
+        'students': students
+    }
+
+    return render(request, 'core/home.html', context)
+
+
+def update(request):
+    if request.method == 'POST':
+        id = request.POST.get('id')
+        try:
+            student = Student.objects.get(id=id)
+            student_dict = model_to_dict(student)
+            return JsonResponse({'status': '1', 'student': student_dict})
+        except:
+            return JsonResponse({'status': '0'})
+
+
+def delete(request):
+    if request.method == 'POST':
+        id = request.POST.get('id')
+        try:
+            Student.objects.get(id=id).delete()
+            return JsonResponse({'status': '1'})
+        except:
+            return JsonResponse({'status': '0'})

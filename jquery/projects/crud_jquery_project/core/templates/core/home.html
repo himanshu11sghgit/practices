@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+    <title>Home Page</title>
+
+    <style>
+
+
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="alert alert-danger text-center">Crud Jquery Project</h2>
+
+        <div class="row">
+            <div class="col-sm-4">
+                <h3 class="alert alert-info text-center">Add Information</h3>
+
+
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    
+                    <input type="hidden" name="id" id="id" class="form-control">
+                    <!-- {% for fm in form %}
+                        {{fm.label_tag}} {{fm}}
+                    {% endfor %} -->
+
+                    {{form.as_p}}
+                    
+
+                    <div class="d-flex justify-content-between">
+                        <input type="button" value="Submit" id="submit" class="btn btn-sm btn-success">
+                        <input type="reset" value="Reset"  class="btn btn-sm btn-danger">
+
+                    </div>
+                </form>
+            </div>
+
+
+            <div class="col-sm-8">
+                <h3 class="alert alert-info text-center">View Information</h3>
+
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Password</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+
+                    <tbody>
+                        {% for student in students %}
+                            <tr>
+                                <td>{{student.id}}</td>
+                                <td>{{student.name}}</td>
+                                <td>{{student.email}}</td>
+                                <td>{{student.password}}</td>
+                                <td id="col-action">
+                                    <button class="btn btn-sm btn-warning update" data-id="{{student.id}}">Update</button>
+                                    <button class="btn btn-sm btn-danger delete" data-id="{{student.id}}">Delete</button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+
+        </div>
+    </div>
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script type="text/javascript">
+        
+        
+        $(document).ready(function()
+        {
+            // let id = $("#id").val();
+            // console.log('helllo', id);
+            // console.log('helllo', typeof id);
+            
+            // add functionality 
+            $("#submit").on("click", function()
+            {
+                let id, name, email, password, csrf;
+                id = $("#id").val();
+                name = $("#name-id").val();
+                email = $("#email-id").val();
+                password = $("#password-id").val();
+                csrf = $("input[name=csrfmiddlewaretoken]").val();
+
+                if (name === "")
+                {
+                    alert("Enter name!!")
+                }
+                else if (email === "")
+                {
+                    alert("Enter email!!")
+                }
+                else if (password === "")
+                {
+                    alert("Enter password!!")
+                }
+                else
+                {
+                    data = {
+                        id: id,
+                        name: name,
+                        email: email,
+                        password: password,
+                        csrfmiddlewaretoken: csrf
+                    }
+
+                    $.ajax(
+                        {
+                            url: '/',
+                            method: "POST",
+                            data: data,
+                            success: function(data)
+                            {
+                                if (data.status === '1')
+                                {
+                                    let students = data.students
+                                    let content = "";
+
+                                    for (let i=0; i<students.length; i++)
+                                    {
+                                        content += `
+
+                                            <tr>
+                                                <td>${students[i].id}</td>
+                                                <td>${students[i].name}</td>
+                                                <td>${students[i].email}</td>
+                                                <td>${students[i].password}</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-warning update" data-id=${students[i].id}>Update</button>
+                                                    <button class="btn btn-sm btn-danger delete" data-id=${students[i].id}>Delete</button>
+                                                </td>
+                                            </tr>
+                                        `;
+                                        
+                                    }
+                                    $("tbody").html(content);
+                                    $("#id").val('');
+                                    $("form")[0].reset();
+                                    
+                                }
+                                else if (data.status === '0')
+                                {
+                                    alert('failed');
+                                    $("#id").val('');
+                                    $("form")[0].reset();
+                                }
+                            }
+                        }
+                    )
+                }
+            })
+ 
+    
+            // delete functionality
+            $("tbody").on("click", ".delete", function()
+            {
+                let id, csrf, myThis;
+                id = $(this).attr("data-id");
+                csrf = $("input[name=csrfmiddlewaretoken]").val();
+                myThis = $(this);
+
+                data = {
+                        id: id,
+                        csrfmiddlewaretoken: csrf
+                    }
+
+                $.ajax(
+                    {
+                        url: "/delete/",
+                        method: "POST",
+                        data: data,
+                        success: function(data)
+                        {
+                            console.log(data);
+                            myThis.closest("tr").fadeOut("slow", function()
+                            {
+                                myThis.closest("tr").remove();
+                            })
+                        }
+
+                    }
+                )
+            })
+    
+            // update functionality
+            
+            $("tbody").on("click", ".update", function()
+            {
+                let id, csrf;
+                id = $(this).attr("data-id");
+                csrf = $("input[name=csrfmiddlewaretoken]").val();
+
+                data = {
+                        id: id,
+                        csrfmiddlewaretoken: csrf
+                    }
+
+                $.ajax(
+                    {
+                        url: "/update/",
+                        method: "POST",
+                        data: data,
+                        success: function(data)
+                        {
+                            let student = data.student;
+                            if (data.status === '1')
+                            {
+                                $("#id").val(student.id);
+                                $("#name-id").val(student.name);
+                                $("#email-id").val(student.email);
+                                $("#password-id").val(student.password);
+                            }
+                            else if (data.status === '0')
+                            {
+                                alert('failed!!')
+                            }
+                        }
+
+                    }
+                )
+            })
+        })
+
+
+
+
+    </script>
+</body>
+</html>
