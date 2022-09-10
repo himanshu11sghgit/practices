@@ -39,7 +39,7 @@ input
     height: 20px;
 }
 
-input[type="submit"]
+input[type="button"]
 {
     background: #2f558e;
     color: #dbdae5;

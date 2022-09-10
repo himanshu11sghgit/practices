@@ -52,8 +52,8 @@
                                 <td>{{student.email}}</td>
                                 <td>{{student.password}}</td>
                                 <td id="col-action">
-                                    <button class="btn btn-sm btn-warning btn-update" data-sid="{{student.id}}">Update</button>
-                                    <button class="btn btn-sm btn-danger btn-delete" data-sid="{{student.id}}">Delete</button>
+                                    <button class="btn btn-sm btn-warning" id="btn-update" data-sid="{{student.id}}">Update</button>
+                                    <button class="btn btn-sm btn-danger" id="btn-delete" data-sid="{{student.id}}">Delete</button>
                                 </td>
                             </tr>
                         {% endfor %}
