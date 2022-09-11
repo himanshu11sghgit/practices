@@ -87,10 +87,6 @@
         
         $(document).ready(function()
         {
-            // let id = $("#id").val();
-            // console.log('helllo', id);
-            // console.log('helllo', typeof id);
-            
             // add functionality 
             $("#submit").on("click", function()
             {
@@ -122,6 +118,7 @@
                         password: password,
                         csrfmiddlewaretoken: csrf
                     }
+                    console.log('1');
 
                     $.ajax(
                         {
@@ -130,9 +127,19 @@
                             data: data,
                             success: function(data)
                             {
+                                console.log("2");
+                                console.log(data);
+                                console.log(typeof data);
+                                let students2, students;
+                                // students2 = data.students
+                                // console.log(students2);
+                                // console.log(typeof students2);
+                                students = $.parseJSON(data.students)
+                                // console.log(students);
+                                // console.log(typeof students);
                                 if (data.status === '1')
                                 {
-                                    let students = data.students
+                                    // let students = data.students
                                     let content = "";
 
                                     for (let i=0; i<students.length; i++)
@@ -140,13 +147,13 @@
                                         content += `
 
                                             <tr>
-                                                <td>${students[i].id}</td>
-                                                <td>${students[i].name}</td>
-                                                <td>${students[i].email}</td>
-                                                <td>${students[i].password}</td>
+                                                <td>${students[i].pk}</td>
+                                                <td>${students[i].fields.name}</td>
+                                                <td>${students[i].fields.email}</td>
+                                                <td>${students[i].fields.password}</td>
                                                 <td>
-                                                    <button class="btn btn-sm btn-warning update" data-id=${students[i].id}>Update</button>
-                                                    <button class="btn btn-sm btn-danger delete" data-id=${students[i].id}>Delete</button>
+                                                    <button class="btn btn-sm btn-warning update" data-id=${students[i].pk}>Update</button>
+                                                    <button class="btn btn-sm btn-danger delete" data-id=${students[i].pk}>Delete</button>
                                                 </td>
                                             </tr>
                                         `;
@@ -163,6 +170,10 @@
                                     $("#id").val('');
                                     $("form")[0].reset();
                                 }
+                            },
+                            error: function ()
+                            {
+                                console.log("error!!");
                             }
                         }
                     )
@@ -221,13 +232,18 @@
                         data: data,
                         success: function(data)
                         {
-                            let student = data.student;
+                            var student = $.parseJSON(data.student)
                             if (data.status === '1')
                             {
-                                $("#id").val(student.id);
-                                $("#name-id").val(student.name);
-                                $("#email-id").val(student.email);
-                                $("#password-id").val(student.password);
+                                for (let i=0; i<student.length; i++)
+                                {
+                                    // console.log(student[i]);
+                                    $("#id").val(student[i].pk);
+                                    $("#name-id").val(student[i].fields.name);
+                                    $("#email-id").val(student[i].fields.email);
+                                    $("#password-id").val(student[i].fields.password);
+
+                                }
                             }
                             else if (data.status === '0')
                             {
