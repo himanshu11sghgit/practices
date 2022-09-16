@@ -2,6 +2,8 @@ nums = [22, 11, 88, 66, 55, 77, 33, 44]
 nums2 = [20, 1, 2, 3, 1, 10, 5, 4, 10, 13, 21, 12, 2]
 
 
+
+
 def quick_sort(arr, left, right):
     if left < right:
         pivot_index = partition(arr, left, right)
